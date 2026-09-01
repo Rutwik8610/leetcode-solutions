@@ -3,14 +3,22 @@ name: LeetCode Sync
 on:
   workflow_dispatch:
 
+  schedule:
+    # Runs every day at 6:00 PM IST
+    # GitHub cron uses UTC, so 18:00 IST = 12:30 UTC
+    - cron: "30 12 * * *"
+
 jobs:
   sync:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Sync LeetCode Solutions
-        uses: dos-m0nk3y/LeetCode-Synchronizer@v1.1.0
+      - name: Sync LeetCode Submissions
+        uses: joshcai/leetcode-sync@v1.7
         with:
-          GITHUB_TOKEN: ${{ github.token }}
-          LEETCODE_SESSION: ${{ secrets.LEETCODE_SESSION }}
-          LEETCODE_CSRF_TOKEN: ${{ secrets.LEETCODE_CSRF_TOKEN }}
+          github-token: ${{ github.token }}
+          leetcode-csrf-token: ${{ secrets.LEETCODE_CSRF_TOKEN }}
+          leetcode-session: ${{ secrets.LEETCODE_SESSION }}
+          filter-duplicate-secs: 86400
+          verbose: true
+          commit-header: "[LeetCode Sync]"
